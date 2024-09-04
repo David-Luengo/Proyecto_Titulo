@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/Deportes.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+  <title>EduAdmin</title>
+</head>
+
+<body>
+
+  <!-- ===================================== -->
+  <!-- Encabezado -->
+  <!-- ===================================== -->
+
+
+  <nav class="navbar navbar-expand-lg p-3 " id="menu" style="background-color: black; padding: 10px;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">
+        <img src="./img/icono.png" alt="" width="30" height="30" class="d-inline-block align-top">
+        <span class="custom-text fs-5 fw-bold" style="color:  white;">EduAdmin</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="deportes.html" style="color:  white;">Deportes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="informaciones.html" style="color:  white;">Informaciones</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="mision.html" style="color:  white;">Misión</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="vocacion.html" style="color:  white;">Vocación</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="servicios.html" style="color:  white;">Servicios</a>
+          </li>
+
+        </ul>
+
+      </div>
+      <a class="nav-link nav-item fs-5" href="login.html" style="color: white;"><i class="fas fa-user"></i> Login</a>
+    </div>
+
+  </nav>
+
+  <header class="container">
+    <h1>Deportes</h1>
+    <p style="margin-top: 20px;">En nuestro colegio, ofrecemos una variedad de deportes que te permiten disfrutar de una grata experiencia,
+      convivir con tus compañeros, desarrollar tus habilidades de comunicación y fortalecer los lazos con tus familias. Nuestros programas deportivos están diseñados para fomentar el crecimiento personal, el trabajo en equipo y la competencia sana.</p>
+  </header>
+  <main>
+    <div class="container-fluid img-fondo">
+      <section class="deportes deportes-background">
+        <article class="deporte">
+          <img src="./img/Img deportes/Fútbol.jpg" alt="Fútbol">
+          <h2 class="text-center" style="margin: 20px;">Fútbol</h2>
+        </article>
+        <article class="deporte">
+          <img src="./img/Img deportes/Básquetbol.jpg" alt="Baloncesto">
+          <h2 class="text-center" style="margin: 20px;">Básquetbol</h2>
+        </article>
+        <article class="deporte">
+          <img src="./img/Img deportes/Voleibol.jpg" alt="Voleibol">
+          <h2 class="text-center" style="margin: 20px;">Voleibol</h2>
+        </article>
+        <article class="deporte">
+          <img src="./img/Img deportes/Rugby.jpg" alt="Rugby">
+          <h2 class="text-center" style="margin: 20px;">Rugby</h2>
+        </article>
+        <article class="deporte">
+          <img src="./img/Img deportes/Hokey.jpg" alt="Hockey">
+          <h2 class="text-center" style="margin: 20px;">Hockey</h2>
+        </article>
+        <article class="deporte">
+          <img src="./img/Img deportes/Atletismo.jpg" alt="Atletismo">
+          <h2 class="text-center" style="margin: 20px;">Atletismo</h2>
+        </article>
+        <article class="deporte">
+          <img src="./img/Img deportes/Gimnasia.jpg.jpeg" alt="Gimnasia">
+          <h2 class="text-center" style="margin: 20px;">Gimnasia</h2>
+        </article>
+        <article class="deporte">
+          <img src="./img/Img deportes/Ciclismo.jpg" alt="Ciclismo">
+          <h2 class="text-center" style="margin: 20px;">Ciclismo</h2>
+        </article>
+      </section>
+    </div>
+  </main>
+
+
+
+
+
+  <footer class=" container-fluid bg-gray p-4">
+    <div class="row">
+      <div class="col-md-4">
+        <h5 class="text-uppercase">Contacto</h5>
+        <form id="contact-form" method="post" action="enviar.php">
+          <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="mensaje">Mensaje:</label>
+            <textarea style="resize: none;" id="mensaje" name="mensaje" class="form-control" rows="5"
+              required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="margin-top: 20px">Enviar</button>
+        </form>
+      </div>
+
+      <div class="col-md-4">
+        <h5 class="text-uppercase">Ubicación</h5>
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3324.444444444445!2d-70.63333333333333!3d-33.48333333333333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5a5a5a5a5a5%3A0x5050505050505050!2sMacul%2C+Santiago%2C+Chile!5e0!3m2!1ses!2scl!4v1643723401111!5m2!1ses!2scl"
+          width="100%" height="200" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false"
+          tabindex="0"></iframe>
+        </iframe>
+        <p class="text-secondary">Macul</p>
+        <ul class="List-unstyled">
+          <li><i class="fas fa-envelope"></i> <a href="mailto:info@eduadmin.com"
+              class="text-secondary">info@eduadmin.com</a></li>
+          <li><i class="fas fa-phone"></i> <a href="https://wa.me/56974394982" target="_blank"
+              class="text-secondary">+56 9 7439 4982</a></li>
+          <li><i class="fab fa-facebook-f"></i> <a href="https://www.facebook.com/eduadmin" target="_blank"
+              class="text-secondary">Facebook</a></li>
+          <li><i class="fab fa-instagram"></i> <a href="https://instagram.com/eduadmin" target="_blank"
+              class="text-secondary">Instagram</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <h5 class="text-uppercase">Desarrolladores</h5>
+        <p class="text-secondary">Página desarrollada por David Luengo, Diego Lezana y Vicente Basaure</p>
+        <div class="col-md-4" style="margin-top: 20px;">
+          <h5 class="text-uppercase">Ayuda y Soporte</h5>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-secondary">Preguntas frecuentes</a></li>
+            <li><a href="#" class="text-secondary">Manual de usuario</a></li>
+            <li><a href="#" class="text-secondary">Soporte técnico</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>

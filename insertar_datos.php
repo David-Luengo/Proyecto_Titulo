@@ -21,9 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $direccion = isset($_POST['direccion']) ? $_POST['direccion'] : null;
     $contrasena = isset($_POST['contrasena']) ? password_hash($_POST['contrasena'], PASSWORD_DEFAULT) : null;
 
-    // Verificar si los datos fueron recibidos correctamente antes de proceder
     if ($nombre && $apellido && $correo && $telefono && $direccion && $contrasena) {
-        // Determinar la tabla según el dominio del correo
+        
         if (strpos($correo, '@administrador.com') !== false) {
             $tabla = 'administrador';
         } elseif (strpos($correo, '@profesor.com') !== false) {
@@ -34,25 +33,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $tabla = 'alumnos';
         }
 
-        // Consulta SQL para insertar los datos en la tabla correspondiente
         $query = "INSERT INTO $tabla (nombre, apellido, correo, numero, direccion, contrasena) 
                   VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$direccion', '$contrasena')";
 
-        // Ejecutar la consulta
         $result = pg_query($conn, $query);
 
         if ($result) {
-            // Redirigir al formulario de login
-            header("Location: login.html");
-            exit(); // Asegurarse de que el script se detenga después de la redirección
+            echo "<div style='position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; text-align: center; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);'>
+                    <p>Usuario registrado correctamente.</p>
+                    <button onclick=\"window.location.href = 'login.html';\">Continuar</button>
+                  </div>";
+            exit(); 
         } else {
             echo "Error al registrar al usuario: " . pg_last_error($conn) . "\n";
         }
     } else {
         echo "Error: No se recibieron todos los datos del formulario.";
     }
-
-    // Cerrar la conexión
     pg_close($conn);
 }
 ?>

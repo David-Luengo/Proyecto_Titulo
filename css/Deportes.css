@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+
+
+
+header {
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    text-align: center;
+    color: #000000;
+}
+
+.img-fondo{
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    background-image: url('../img/patio.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+
+#menu li>a {
+    font-size: 18px;
+    font-weight: bold;
+    color: #3f3f3f;
+}
+
+
+#menu form>button {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.carousel-inner {
+    max-height: 25rem;
+}
+
+.carousel-item {
+    text-align: center;
+    height: 25rem;
+    /* Mantén la altura fija según la altura máxima */
+}
+
+.carousel-item img {
+    object-fit: cover;
+    height: 100%;
+    width: auto;
+    /* Ajusta la anchura para mantener la proporción de la imagen */
+    margin: 0 auto;
+    /* Centra la imagen horizontalmente */
+}
+
+
+
+@media (max-width:768px) {
+    #intro {
+        width: 90% !important;
+    }
+
+    .servicio-fila {
+        width: 100% !important;
+        text-align: center;
+    }
+}
+
+@media(max-width:576px) {
+    .icono-wrap {
+        flex-wrap: wrap;
+        justify-content: center !important;
+    }
+}
+
+/*custom links para los textos e imagenes del inicio*/
+
+.custom-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    /* fade */
+}
+
+.custom-link:hover {
+    color: #aaa;
+    text-decoration: none;
+}
+
+.custom-link img {
+    transition: opacity 0.2s ease;
+    /* fade */
+}
+
+.custom-link:hover img {
+    opacity: 0.7;
+    /* fade */
+}
+
+
+
+footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+footer li {
+    margin-bottom: 10px;
+}
+
+footer a {
+    text-decoration: none;
+    color: #337ab7;
+}
+
+footer a:hover {
+    color: #23527c;
+}
+
+.bg-gray {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+
+
+
+
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.deportes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.deporte {
+    margin: 20px;
+    width: 250px;
+    background-color: #f7f7f7;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.deporte img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+.deporte h2 {
+    margin-top: 0;
+}
+
+.deporte p {
+    font-size: 16px;
+    color: #666;
+}
