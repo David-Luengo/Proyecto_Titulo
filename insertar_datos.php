@@ -23,17 +23,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Verificar si los datos fueron recibidos correctamente antes de proceder
     if ($nombre && $apellido && $correo && $telefono && $direccion && $contrasena) {
-        // Consulta SQL para insertar los datos
-        $query = "INSERT INTO alumnos (nombre, apellido, correo, n_telefono, direccion, contrasena) 
+        // Determinar la tabla según el dominio del correo
+        if (strpos($correo, '@administrador.com') !== false) {
+            $tabla = 'administrador';
+        } elseif (strpos($correo, '@profesor.com') !== false) {
+            $tabla = 'profesor';
+        } elseif (strpos($correo, '@apoderados.com') !== false) {
+            $tabla = 'apoderados';
+        } else {
+            $tabla = 'alumnos';
+        }
+
+        // Consulta SQL para insertar los datos en la tabla correspondiente
+        $query = "INSERT INTO $tabla (nombre, apellido, correo, numero, direccion, contrasena) 
                   VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$direccion', '$contrasena')";
 
         // Ejecutar la consulta
         $result = pg_query($conn, $query);
 
         if ($result) {
-            echo "Alumno registrado correctamente.";
+            // Redirigir al formulario de login
+            header("Location: login.html");
+            exit(); // Asegurarse de que el script se detenga después de la redirección
         } else {
-            echo "Error al registrar al alumno: " . pg_last_error($conn) . "\n";
+            echo "Error al registrar al usuario: " . pg_last_error($conn) . "\n";
         }
     } else {
         echo "Error: No se recibieron todos los datos del formulario.";
