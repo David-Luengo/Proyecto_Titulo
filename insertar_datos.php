@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $tabla = 'alumnos';
         }
-
         $query = "INSERT INTO $tabla (nombre, apellido, correo, numero, direccion, contrasena) 
                   VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$direccion', '$contrasena')";
 
