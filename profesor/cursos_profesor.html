@@ -13,14 +13,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <title>Index</title>
+    <title>Notas</title>
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-lg p-3 fixed-top " id="menu" style="background-color: black; padding: 10px;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index_alumnos.html">
+            <a class="navbar-brand" href="index_profesor.html">
                 <img src="../img/icono.png" alt="" width="30" height="30" class="d-inline-block align-top">
                 <span class="custom-text fs-5 fw-bold" style="color:  white;">EduAdmin</span>
             </a>
@@ -30,124 +30,52 @@
             </button>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="asistencia_alumno.html" style="color:  white;">Asistencia</a>
+                    <a class="nav-link" href="cursos_profesor.html" style="color:  white;">Cursos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="notas_alumnos.html" style="color:  white;">Notas</a>
+                    <a class="nav-link" href="reuniones_profesor.html" style="color:  white;">Reuniones</a>
                 </li>
-                <li class="nav-item"></li>
-                    <a class="nav-link" href="materias.html" style="color:  white;">Materias</a>
-                </li>
-    
+                <li class="nav-item">
+                    <a class="nav-link" href="calendario_profesor.html" style="color:  white;">Calendario</a>
             </ul>
-    
-            <a class="nav-link nav-item fs-6" href="../index.html" style="color: white;">Cerrar Sesión</a </div>
+
+            <a class="nav-link nav-item fs-6" href="login.html" style="color: white;">Cerrar Sesión</a </div>
     </nav>
 
+    <div class="container mx-auto mt-10" style="margin: 150px;">
+        <div class="space-y-4">
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primero_a.html"
+                style="color: rgb(0, 0, 0); text-decoration: none;">
+                <span>PRIMERO MEDIO A</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.html"
+                style="color: rgb(0, 0, 0); text-decoration: none;">
+                <span>PRIMERO MEDIO B</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.html"
+                style="color: rgb(0, 0, 0); text-decoration: none;">
+                <span>PRIMERO MEDIO C</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.html"
+                style="color: rgb(0, 0, 0); text-decoration: none;">
+                <span>SEGUNDO MEDIO A</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.html"
+                style="color: rgb(0, 0, 0); text-decoration: none;">
+                <span>SEGUNDO MEDIO B</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.html"
+                style="color: rgb(0, 0, 0); text-decoration: none;">
+                <span>SEGUNDO MEDIO C</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
 
-    <title>Perfil de Usuario</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            height: 80vh;
-            background-color: #f4f4f4;
-        }
-
-        .profile-container {
-            display: flex;
-            width: 75%;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-
-        .profile-info {
-            flex: 2;
-            padding: 20px;
-        }
-
-        .profile-info img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-        }
-
-        .profile-info h1 {
-            margin-top: 10px;
-            font-size: 24px;
-            color: #333;
-        }
-
-        .profile-info p {
-            margin: 8px 0;
-            color: #666;
-        }
-
-        .profile-info a {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 16px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-
-        .profile-info a:hover {
-            background-color: #0056b3;
-        }
-
-        .dashboard {
-            flex: 1;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-left: 1px solid #ddd;
-        }
-
-        .dashboard h3 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .dashboard ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .dashboard ul li {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-        }
-    </style>
-
-    <div class="profile-container">
-        <div class="profile-info">
-            <img src="../img/alumnos.jpg" alt="Foto de perfil">
-            <h1>Juan Pérez</h1>
-            <p><strong>Apellido:</strong> Pérez</p>
-            <p><strong>Correo:</strong> juan.perez@example.com</p>
-            <p><strong>Número Telefónico:</strong> +569 1234 5678</p>
-            <p><strong>Dirección:</strong> Calle Falsa 123, Ciudad</p>
-            <a href="editar-datos.html">Editar Datos</a>
-        </div>
-
-        <div class="dashboard">
-            <h3>Dashboard</h3>
-            <ul>
-                <li>Lenguaje</li>
-                <li>Matemática</li>
-                <li>Historia</li>
-                <li>Ciencias Naturales</li>
-                <li>Física</li>
-            </ul>
+            
         </div>
     </div>
 

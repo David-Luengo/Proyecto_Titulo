@@ -18,13 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (strpos($correo, '@administrador.com') !== false) {
             $tabla = 'administrador';
             $pagina = 'administrador/index_administrador.html';
-        } elseif (strpos($correo, '@profesor.com') !== false) {
+        } elseif (strpos($correo, '@profesor.cl') !== false) {
             $tabla = 'profesor';
             $pagina = 'profesor/index_profesor.html';
-        } elseif (strpos($correo, '@alumnos.com') !== false) {
+        } elseif (strpos($correo, '@alumnos.cl') !== false) {
             $tabla = 'alumnos';
             $pagina = 'alumnos/index_alumnos.html';
-        } elseif (strpos($correo, '@apoderados.com') !== false) {
+        } elseif (strpos($correo, '@apoderados.cl') !== false) {
             $tabla = 'apoderadors';
             $pagina = 'apoderados/index_apoderados.html';
         } else {

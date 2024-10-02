@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($nombre && $apellido && $correo && $telefono && $direccion && $contrasena) {
         
-        if (strpos($correo, '@administrador.com') !== false) {
+        if (strpos($correo, '@administrador.cl') !== false) {
             $tabla = 'administrador';
-        } elseif (strpos($correo, '@profesor.com') !== false) {
+        } elseif (strpos($correo, '@profesor.cl') !== false) {
             $tabla = 'profesor';
-        } elseif (strpos($correo, '@apoderados.com') !== false) {
+        } elseif (strpos($correo, '@apoderados.cl') !== false) {
             $tabla = 'apoderados';
         } else {
             $tabla = 'alumnos';
