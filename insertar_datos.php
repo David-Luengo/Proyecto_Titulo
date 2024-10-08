@@ -21,6 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $direccion = isset($_POST['direccion']) ? $_POST['direccion'] : null;
     $contrasena = isset($_POST['contrasena']) ? password_hash($_POST['contrasena'], PASSWORD_DEFAULT) : null;
 
+    // Procesar la imagen subida, si se envió una
+    $imagenCodificada = null; // Inicializar la variable de imagen
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
+        $imagen = $_FILES['imagen']['tmp_name'];
+
+        // Leer el archivo de imagen
+        $imagenData = file_get_contents($imagen); // leer el archivo
+        if ($imagenData !== false) {
+            $imagenCodificada = pg_escape_bytea($conn, $imagenData); // Preparar la imagen para almacenar en PostgreSQL
+        } else {
+            echo "Error al leer la imagen.";
+            exit();
+        }
+    }
+
     if ($nombre && $apellido && $correo && $telefono && $direccion && $contrasena) {
         
         if (strpos($correo, '@administrador.cl') !== false) {
@@ -33,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $tabla = 'alumnos';
         }
 
-        $query = "INSERT INTO $tabla (nombre, apellido, correo, numero, direccion, contrasena) 
-                  VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$direccion', '$contrasena')";
+        $query = "INSERT INTO $tabla (nombre, apellido, correo, numero, direccion, contrasena, imagen) 
+                  VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$direccion', '$contrasena', '$imagenCodificada')";
 
         $result = pg_query($conn, $query);
 

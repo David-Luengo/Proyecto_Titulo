@@ -1,48 +1,61 @@
+<?php
+session_start();
+
+// Verificar si la sesión está iniciada
+if (!isset($_SESSION['usuario'])) {
+    // Si no hay sesión iniciada, redirigir al login
+    header("Location: /Proyecto_titulo/index.html"); // o la página de login que utilices
+    exit();
+}
+?>
+
 <!doctype html>
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="./profesor.css/cursos.css">
+    <link rel="stylesheet" href="./alumnos.css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <title>Notas</title>
+    <title>Index</title>
 </head>
 
 <body>
 
-  <nav class="navbar navbar-expand-lg p-3 fixed-top " id="menu" style="background-color: black; padding: 10px;">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="index_alumnos.html">
-        <img src="../img/icono.png" alt="" width="30" height="30" class="d-inline-block align-top">
-        <span class="custom-text fs-5 fw-bold" style="color:  white;">EduAdmin</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="asistencia_alumno.html" style="color:  white;">Asistencia</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="notas_alumnos.html" style="color:  white;">Notas</a>
-        </li>
-        <li class="nav-item"></li>
-        <a class="nav-link" href="materias.html" style="color:  white;">Materias</a>
-        </li>
-
-      </ul>
-
-      <a class="nav-link nav-item fs-6" href="../index.html" style="color: white;">Cerrar Sesión</a </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg p-3 fixed-top " id="menu" style="background-color: black; padding: 10px;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index_alumnos.php">
+                <img src="../img/icono.png" alt="" width="30" height="30" class="d-inline-block align-top">
+                <span class="custom-text fs-5 fw-bold" style="color:  white;">EduAdmin</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="asistencia_alumno.php" style="color:  white;">Asistencia</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="notas_alumnos.php" style="color:  white;">Notas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="materias.php" style="color:  white;">Materias</a>
+                </li>
+            </ul>
+    
+            <!-- Actualiza el enlace a logout.php -->
+            <a class="nav-link nav-item fs-6" href="../logout.php" style="color: white;">Cerrar Sesión</a>
+        </div>
+    </nav>
+    
 
   <style>
     body {
@@ -125,61 +138,57 @@
       border-radius: 4px;
     }
   </style>
-  <div class="container" style="margin-top: 150px;">
-    <h3>Notas del estudiante</h3>
+  <div class="container-fluid mt-5" style="padding: 80px;">
+
+    <h2 class="text-center mb-4">Registro de Asistencia de Juan Pérez</h2>
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
           <th>Materia</th>
-          <th>Nota 1</th>
-          <th>Nota 2</th>
-          <th>Nota 3</th>
-          <th>Promedio</th>
+          <th>% Asistencia</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Matemática</td>
-          <td>85</td>
-          <td>90</td>
-          <td>78</td>
-          <td>84.33</td>
+          <td>Matemáticas</td>
+          <td>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0"
+                aria-valuemax="100">90%</div>
+            </div>
+          </td>
         </tr>
         <tr>
-          <td>Lenguaje</td>
-          <td>92</td>
-          <td>88</td>
-          <td>95</td>
-          <td>91.67</td>
-        </tr>
-        <tr>
-          <td>Historia</td>
-          <td>78</td>
-          <td>82</td>
-          <td>85</td>
-          <td>81.67</td>
+          <td>Lengua Española</td>
+          <td>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0"
+                aria-valuemax="100">80%</div>
+            </div>
+          </td>
         </tr>
         <tr>
           <td>Ciencias Naturales</td>
-          <td>90</td>
-          <td>85</td>
-          <td>92</td>
-          <td>89.00</td>
+          <td>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 95%;" aria-valuenow="95" aria-valuemin="0"
+                aria-valuemax="100">95%</div>
+            </div>
+          </td>
         </tr>
         <tr>
-          <td>Física</td>
-          <td>85</td>
-          <td>80</td>
-          <td>88</td>
-          <td>84.33</td>
+          <td>Historia</td>
+          <td>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0"
+                aria-valuemax="100">85%</div>
+            </div>
+          </td>
         </tr>
-        <!-- Add more rows for each subject -->
       </tbody>
     </table>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+
   <footer class="fixed-bottom container-fluid bg-gray p-4">
     <div class="row">
       <div class="col-md-4">
@@ -209,6 +218,11 @@
       </div>
     </div>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
 </body>
 
 </html>

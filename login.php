@@ -1,4 +1,6 @@
 <?php
+session_start(); // Iniciar la sesión
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $host = "localhost";
@@ -8,22 +10,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = "123456";
 
     $conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password";
-
     $conn = pg_connect($conn_string);
 
-    $correo = isset($_POST['correo']) ? $_POST['correo'] : null;
-    $contrasena = isset($_POST['contrasena']) ? $_POST['contrasena'] : null;
+    $correo = isset($_POST['correo']) ? pg_escape_string($conn, $_POST['correo']) : null;
+    $contrasena = isset($_POST['contrasena']) ? pg_escape_string($conn, $_POST['contrasena']) : null;
 
     if ($correo && $contrasena) {
         if (strpos($correo, '@administrador.com') !== false) {
             $tabla = 'administrador';
-            $pagina = 'administrador/index_administrador.html';
+            $pagina = 'administrador/index_administrador.php';
         } elseif (strpos($correo, '@profesor.cl') !== false) {
             $tabla = 'profesor';
             $pagina = 'profesor/index_profesor.html';
         } elseif (strpos($correo, '@alumnos.cl') !== false) {
             $tabla = 'alumnos';
-            $pagina = 'alumnos/index_alumnos.html';
+            $pagina = 'alumnos/index_alumnos.php';
         } elseif (strpos($correo, '@apoderados.cl') !== false) {
             $tabla = 'apoderadors';
             $pagina = 'apoderados/index_apoderados.html';
@@ -32,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit();
         }
 
-        
+        // Consulta para verificar la contraseña
         $query = "SELECT contrasena FROM $tabla WHERE correo = '$correo'";
         $result = pg_query($conn, $query);
 
@@ -41,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $hash_contrasena = $row['contrasena'];
 
             if (password_verify($contrasena, $hash_contrasena)) {
+                // Guardar información en la sesión
+                $_SESSION['usuario'] = $correo;
                 header("Location: /Proyecto_titulo/$pagina");
                 exit();
             } else {

@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+// Verificar si la sesión está iniciada
+if (!isset($_SESSION['usuario'])) {
+    // Si no hay sesión iniciada, redirigir al login
+    header("Location: /Proyecto_titulo/index.html"); // o la página de login que utilices
+    exit();
+}
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -9,18 +20,18 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="./profesor.css/cursos.css">
+    <link rel="stylesheet" href="./alumnos.css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <title>Curso Primero A</title>
+    <title>Index</title>
 </head>
 
-<body class="bg-gray-100">
+<body>
 
     <nav class="navbar navbar-expand-lg p-3 fixed-top " id="menu" style="background-color: black; padding: 10px;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index_alumnos.html">
+            <a class="navbar-brand" href="index_alumnos.php">
                 <img src="../img/icono.png" alt="" width="30" height="30" class="d-inline-block align-top">
                 <span class="custom-text fs-5 fw-bold" style="color:  white;">EduAdmin</span>
             </a>
@@ -30,19 +41,21 @@
             </button>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="asistencia_alumno.html" style="color:  white;">Asistencia</a>
+                    <a class="nav-link" href="asistencia_alumno.php" style="color:  white;">Asistencia</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="notas_alumnos.html" style="color:  white;">Notas</a>
+                    <a class="nav-link" href="notas_alumnos.php" style="color:  white;">Notas</a>
                 </li>
-                <li class="nav-item"></li>
-                <a class="nav-link" href="materias.html" style="color:  white;">Materias</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="materias.php" style="color:  white;">Materias</a>
                 </li>
-
             </ul>
-
-            <a class="nav-link nav-item fs-6" href="../index.html" style="color: white;">Cerrar Sesión</a </div>
+    
+            <!-- Actualiza el enlace a logout.php -->
+            <a class="nav-link nav-item fs-6" href="../logout.php" style="color: white;">Cerrar Sesión</a>
+        </div>
     </nav>
+    
 
     <style>
         .unit-content {
