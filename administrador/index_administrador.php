@@ -79,28 +79,57 @@ if (!isset($_SESSION['usuario'])) {
     die("Error de conexión: " . pg_last_error());
   }
 
+
   // Manejar la búsqueda
   if (isset($_GET['search'])) {
     $search = pg_escape_string($conn, $_GET['search']);
 
-    $query = "SELECT * FROM alumnos WHERE nombre ILIKE '%$search%' OR correo ILIKE '%$search%'";
+    $query = "SELECT * FROM alumnos WHERE 
+        id::text ILIKE '%$search%' OR 
+        nombre ILIKE '%$search%' OR 
+        apellido ILIKE '%$search%' OR 
+        correo ILIKE '%$search%' OR 
+        numero::text ILIKE '%$search%' OR 
+        region ILIKE '%$search%' OR 
+        comuna ILIKE '%$search%' OR 
+        direccion ILIKE '%$search%'";
+
     $result = pg_query($conn, $query);
 
     if ($result) {
       if (pg_num_rows($result) > 0) {
         echo '<div class="container"><h3>Resultados de la búsqueda:</h3><table class="table">';
-        echo '<thead><tr><th>Nombre</th><th>Apellido</th><th>Correo</th><th>Teléfono</th><th>Dirección</th></tr></thead>';
+        echo '<thead><tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Correo</th><th>Teléfono</th><th>Región</th><th>Comuna</th><th>Dirección</th><th>Acciones</th></tr></thead>';
         echo '<tbody>';
 
         while ($row = pg_fetch_assoc($result)) {
           echo '<tr>';
+          echo '<td>' . htmlspecialchars($row['id']) . '</td>';
           echo '<td>' . htmlspecialchars($row['nombre']) . '</td>';
           echo '<td>' . htmlspecialchars($row['apellido']) . '</td>';
           echo '<td>' . htmlspecialchars($row['correo']) . '</td>';
           echo '<td>' . htmlspecialchars($row['numero']) . '</td>';
+          echo '<td>' . htmlspecialchars($row['region']) . '</td>';
+          echo '<td>' . htmlspecialchars($row['comuna']) . '</td>';
           echo '<td>' . htmlspecialchars($row['direccion']) . '</td>';
+
+          echo '<td>
+                  <form action="accion.php" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="permitir' . htmlspecialchars($row['id']) . '">
+                    <button type="submit" name="accion" value="permitir" class="btn btn-success">
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </form>
+                  <form action="accion.php" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="eliminar' . htmlspecialchars($row['id']) . '">
+                    <button type="submit" name="accion" value="eliminar" class="btn btn-danger">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </form>
+                </td>';
           echo '</tr>';
         }
+
         echo '</tbody></table></div>';
       } else {
         echo '<div class="container"><h3>No se encontraron resultados.</h3></div>';
@@ -109,16 +138,15 @@ if (!isset($_SESSION['usuario'])) {
       echo "Error en la consulta: " . pg_last_error($conn);
     }
   }
-
-
   // Cerrar la conexión
   pg_close($conn);
   ?>
 
 
 
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  <footer class="fixed-bottom container-fluid bg-gray p-4">
+  <footer class="container-fluid bg-gray p-4">
     <div class="row">
       <div class="col-md-4">
         <h5 class="text-uppercase">Contacto</h5>

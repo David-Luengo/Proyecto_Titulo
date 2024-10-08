@@ -1,5 +1,5 @@
 <?php
-session_start(); // Iniciar la sesión
+session_start(); 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit();
         }
 
-        // Consulta para verificar la contraseña
+       
         $query = "SELECT contrasena FROM $tabla WHERE correo = '$correo'";
         $result = pg_query($conn, $query);
 
@@ -42,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $hash_contrasena = $row['contrasena'];
 
             if (password_verify($contrasena, $hash_contrasena)) {
-                // Guardar información en la sesión
                 $_SESSION['usuario'] = $correo;
                 header("Location: /Proyecto_titulo/$pagina");
                 exit();
@@ -56,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Por favor, ingrese ambos campos.";
     }
 
-    // Cerrar la conexión
+    
     pg_close($conn);
 }
 ?>

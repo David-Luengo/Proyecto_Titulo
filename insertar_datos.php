@@ -1,42 +1,43 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Datos de conexión
+   
     $host = "localhost";
     $port = "5432";
     $dbname = "Proyecto_Titulo";
     $user = "postgres";
     $password = "123456";
 
-    // Crear la cadena de conexión
+    
     $conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password";
 
-    // Establecer la conexión
+    
     $conn = pg_connect($conn_string);
 
-    // Recibir los datos del formulario
     $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : null;
     $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : null;
     $correo = isset($_POST['correo']) ? $_POST['correo'] : null;
     $telefono = isset($_POST['telefono']) ? $_POST['telefono'] : null;
     $direccion = isset($_POST['direccion']) ? $_POST['direccion'] : null;
     $contrasena = isset($_POST['contrasena']) ? password_hash($_POST['contrasena'], PASSWORD_DEFAULT) : null;
+    $region = $_POST['region'] ? $_POST['region'] : null;;
+    $comuna = $_POST['comuna'] ? $_POST['comuna'] : null;;
 
-    // Procesar la imagen subida, si se envió una
-    $imagenCodificada = null; // Inicializar la variable de imagen
+   
+    $imagenCodificada = null; 
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
         $imagen = $_FILES['imagen']['tmp_name'];
 
-        // Leer el archivo de imagen
-        $imagenData = file_get_contents($imagen); // leer el archivo
+       
+        $imagenData = file_get_contents($imagen); 
         if ($imagenData !== false) {
-            $imagenCodificada = pg_escape_bytea($conn, $imagenData); // Preparar la imagen para almacenar en PostgreSQL
+            $imagenCodificada = pg_escape_bytea($conn, $imagenData); 
         } else {
             echo "Error al leer la imagen.";
             exit();
         }
     }
 
-    if ($nombre && $apellido && $correo && $telefono && $direccion && $contrasena) {
+    if ($nombre && $apellido && $correo && $telefono && $direccion && $contrasena && $region && $comuna) {
         
         if (strpos($correo, '@administrador.cl') !== false) {
             $tabla = 'administrador';
@@ -48,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $tabla = 'alumnos';
         }
 
-        $query = "INSERT INTO $tabla (nombre, apellido, correo, numero, direccion, contrasena, imagen) 
-                  VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$direccion', '$contrasena', '$imagenCodificada')";
+        $query = "INSERT INTO $tabla (nombre, apellido, correo, numero, direccion, contrasena, imagen, region, comuna) 
+                  VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$direccion', '$contrasena', '$imagenCodificada', '$region', '$comuna')";
 
         $result = pg_query($conn, $query);
 
