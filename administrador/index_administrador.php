@@ -99,7 +99,7 @@ if (!isset($_SESSION['usuario'])) {
     if ($result) {
       if (pg_num_rows($result) > 0) {
         echo '<div class="container"><h3>Resultados de la búsqueda:</h3><table class="table">';
-        echo '<thead><tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Correo</th><th>Teléfono</th><th>Región</th><th>Comuna</th><th>Dirección</th><th>Acciones</th></tr></thead>';
+        echo '<thead><tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Correo</th><th>Teléfono</th><th>Región</th><th>Comuna</th><th>Dirección</th><th>Hoja de Matricula</th><th>Acciones</th></tr></thead>';
         echo '<tbody>';
 
         while ($row = pg_fetch_assoc($result)) {
@@ -112,6 +112,11 @@ if (!isset($_SESSION['usuario'])) {
           echo '<td>' . htmlspecialchars($row['region']) . '</td>';
           echo '<td>' . htmlspecialchars($row['comuna']) . '</td>';
           echo '<td>' . htmlspecialchars($row['direccion']) . '</td>';
+          echo '<td>
+          <a href="descargar_archivo.php?id=' . htmlspecialchars($row['id']) . '" class="btn btn-info">
+              Descargar Archivo
+          </a>
+         </td>';
 
           echo '<td>
                   <form action="accion.php" method="post" style="display:inline;">
@@ -121,11 +126,12 @@ if (!isset($_SESSION['usuario'])) {
                     </button>
                   </form>
                   <form action="accion.php" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="eliminar' . htmlspecialchars($row['id']) . '">
+                    <input type="hidden" name="id" value="' . htmlspecialchars($row['id']) . '">
                     <button type="submit" name="accion" value="eliminar" class="btn btn-danger">
                       <i class="fas fa-times"></i>
                     </button>
                   </form>
+
                 </td>';
           echo '</tr>';
         }
