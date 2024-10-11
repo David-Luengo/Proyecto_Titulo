@@ -17,9 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("Error de conexión: " . pg_last_error());
     }
 
-    // Verificar qué acción realizar
     if ($accion == 'eliminar') {
-        // Acción de eliminar
+        
         $query = "DELETE FROM alumnos WHERE id = '$id'";
         $result = pg_query($conn, $query);
 
@@ -29,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "Error al eliminar el alumno: " . pg_last_error($conn);
         }
     } elseif ($accion == 'permiso') {
-        // Acción de permitir acceso (podrías modificar esto según cómo gestionas los permisos)
+        
         $query = "UPDATE alumnos SET permiso = true WHERE id = '$id'";
         $result = pg_query($conn, $query);
 
@@ -40,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Redirigir de vuelta a la página de administración
+    
     header("Location: index_administrador.php");
     pg_close($conn);
 }

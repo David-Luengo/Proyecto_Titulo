@@ -1,10 +1,8 @@
 <?php
 session_start();
 
-// Verificar si la sesión está iniciada
 if (!isset($_SESSION['usuario'])) {
-  // Si no hay sesión iniciada, redirigir al login
-  header("Location: /Proyecto_titulo/index.html"); // o la página de login que utilices
+  header("Location: /Proyecto_titulo/index.html"); 
   exit();
 }
 ?>
@@ -41,7 +39,6 @@ if (!isset($_SESSION['usuario'])) {
       </button>
 
 
-      <!-- Actualiza el enlace a logout.php -->
       <a class="nav-link nav-item fs-6" href="../logout.php" style="color: white;">Cerrar Sesión</a>
     </div>
   </nav>
@@ -57,13 +54,11 @@ if (!isset($_SESSION['usuario'])) {
   </div>
 
   <?php
-  // Verificar si la sesión está iniciada
   if (!isset($_SESSION['usuario'])) {
     header("Location: /Proyecto_titulo/index.html");
     exit();
   }
 
-  // Conectar a la base de datos
   $host = "localhost";
   $port = "5432";
   $dbname = "Proyecto_Titulo";
@@ -78,7 +73,6 @@ if (!isset($_SESSION['usuario'])) {
   }
 
 
-  // Manejar la búsqueda
   if (isset($_GET['search'])) {
     $search = pg_escape_string($conn, $_GET['search']);
 
@@ -145,7 +139,6 @@ if (!isset($_SESSION['usuario'])) {
       echo "Error en la consulta: " . pg_last_error($conn);
     }
   }
-  // Cerrar la conexión
   pg_close($conn);
   ?>
 

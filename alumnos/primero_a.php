@@ -1,13 +1,46 @@
 <?php
 session_start();
 
-// Verificar si la sesión está iniciada
 if (!isset($_SESSION['usuario'])) {
-    // Si no hay sesión iniciada, redirigir al login
-    header("Location: /Proyecto_titulo/index.html"); // o la página de login que utilices
+    header("Location: /Proyecto_titulo/index.html"); 
     exit();
 }
+
+$host = "localhost";
+$port = "5432";
+$dbname = "Proyecto_Titulo";
+$user = "postgres";
+$password = "123456";
+
+$conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password";
+$conn = pg_connect($conn_string);
+
+if (!$conn) {
+    die("Error de conexión: " . pg_last_error());
+}
+
+$usuario_actual = $_SESSION['usuario'];
+
+$query = "SELECT permiso FROM alumnos WHERE correo = $1"; 
+$result = pg_query_params($conn, $query, array($usuario_actual));
+
+if ($result && pg_num_rows($result) > 0) {
+    $row = pg_fetch_assoc($result);
+    $permiso = $row['permiso'];
+
+    if (!$permiso) {
+        echo "<script>alert('No tienes permiso para acceder a esta página.');</script>";
+        header("Location: /Proyecto_titulo/sin_permiso.html");
+        exit();
+    }
+} else {
+    echo "Error al verificar el permiso.";
+    exit();
+}
+
+pg_close($conn);
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -51,7 +84,6 @@ if (!isset($_SESSION['usuario'])) {
                 </li>
             </ul>
     
-            <!-- Actualiza el enlace a logout.php -->
             <a class="nav-link nav-item fs-6" href="../logout.php" style="color: white;">Cerrar Sesión</a>
         </div>
     </nav>

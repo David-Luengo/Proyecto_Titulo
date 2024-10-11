@@ -62,7 +62,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-6 login-style">
                     <h1>Registro</h1>
-                    <form action="insertar_datos.php" method="post">
+                    <form action="insertar_datos.php" method="post" enctype="multipart/form-data">
                         <div class="container">
                             <div class="form-group">
                                 <label for="nombre" style="margin-top: 10px;">Nombre</label>
@@ -146,10 +146,8 @@
                                     const regionSeleccionada = this.value;
                                     const comunaSelect = document.getElementById('comuna');
 
-                                    // Limpiar las opciones previas
                                     comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
 
-                                    // Si se selecciona una región válida, mostrar las comunas
                                     if (regionSeleccionada && comunasPorRegion[regionSeleccionada]) {
                                         comunasPorRegion[regionSeleccionada].forEach(function (comuna) {
                                             const option = document.createElement('option');
@@ -166,13 +164,10 @@
                                     var regionSeleccionada = this.value;
                                     var comunasSelect = document.getElementById('comuna');
 
-                                    // Limpiar las opciones de comuna
                                     comunasSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
 
-                                    // Obtener las comunas según la región
                                     var comunas = comunasPorRegion[regionSeleccionada];
 
-                                    // Añadir las comunas al select
                                     if (comunas) {
                                         comunas.forEach(function (comuna) {
                                             var option = document.createElement('option');

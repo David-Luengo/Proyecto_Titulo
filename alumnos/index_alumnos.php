@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-// Verificar si la sesión está iniciada
+// Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['usuario'])) {
-    // Si no hay sesión iniciada, redirigir al login
-    header("Location: /Proyecto_titulo/index.html"); 
+    // Si no hay una sesión activa, redirigir al usuario a la página de inicio de sesión
+    header("Location: /Proyecto_titulo/login.html");
     exit();
 }
 
-// Conectar a la base de datos
+// Conexión a la base de datos
 $host = "localhost";
 $port = "5432";
 $dbname = "Proyecto_Titulo";
@@ -18,35 +18,36 @@ $password = "123456";
 $conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password";
 $conn = pg_connect($conn_string);
 
+// Verificar si hay conexión
 if (!$conn) {
     die("Error de conexión: " . pg_last_error());
 }
 
-// Obtener el correo o identificador del usuario actual desde la sesión
-$usuario_actual = $_SESSION['usuario'];
+// Obtener el correo del usuario desde la sesión
+$correo = $_SESSION['usuario'];
 
-// Consultar el valor de 'permiso' para el alumno
-$query = "SELECT permiso FROM alumnos WHERE correo = $1"; 
-$result = pg_query_params($conn, $query, array($usuario_actual));
+// Consultar el permiso del alumno
+$query = "SELECT permiso FROM alumnos WHERE correo = '$correo'";
+$result = pg_query($conn, $query);
 
 if ($result && pg_num_rows($result) > 0) {
     $row = pg_fetch_assoc($result);
     $permiso = $row['permiso'];
 
-    // Verificar si el permiso es 'false'
+    // Si el permiso no es true, redirigir al inicio de sesión
     if (!$permiso) {
-        // Si no tiene permiso, redirigir a otra página o mostrar un mensaje de error
-        echo "<script>alert('No tienes permiso para acceder a esta página.');</script>";
-        header("Location: /Proyecto_titulo/sin_permiso.html"); // Redirigir a una página de error o salida
+        header("Location: /Proyecto_titulo/login.html");
         exit();
     }
 } else {
-    echo "Error al verificar el permiso.";
+    // Si no se encuentra el usuario o hay un error, redirigir al inicio de sesión
+    header("Location: /Proyecto_titulo/login.html");
     exit();
 }
 
-pg_close($conn);
+// Aquí puedes agregar el contenido que solo estará disponible si el permiso es true
 ?>
+
 
 
 
@@ -92,7 +93,6 @@ pg_close($conn);
                 </li>
             </ul>
     
-            <!-- Actualiza el enlace a logout.php -->
             <a class="nav-link nav-item fs-6" href="../logout.php" style="color: white;">Cerrar Sesión</a>
         </div>
     </nav>

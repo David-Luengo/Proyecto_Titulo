@@ -22,18 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $region = $_POST['region'] ?? null;
     $comuna = $_POST['comuna'] ?? null;
 
-    // Manejar el archivo subido
-    $archivoContenidoCodificado = null; // Inicializar la variable
-    $nombreArchivo = null; // Inicializar la variable
-    $tipoArchivo = null; // Inicializar la variable
+    $archivoContenidoCodificado = null; 
+    $nombreArchivo = null; 
+    $tipoArchivo = null; 
 
     if (isset($_FILES['archivo'])) {
         if ($_FILES['archivo']['error'] == UPLOAD_ERR_OK) {
-            // Leer el contenido del archivo
+            
             $archivoContenido = file_get_contents($_FILES['archivo']['tmp_name']);
             $nombreArchivo = pg_escape_string($_FILES['archivo']['name']);
             $tipoArchivo = pg_escape_string($_FILES['archivo']['type']);
-            // Codificar el contenido del archivo para almacenarlo en la base de datos
             $archivoContenidoCodificado = pg_escape_bytea($conn, $archivoContenido);
         } else {
             echo "Error al subir el archivo: " . $_FILES['archivo']['error'];
@@ -42,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "No se ha subido ningún archivo.";
     }
 
-    // Verifica que todos los datos requeridos estén presentes
     if ($nombre && $apellido && $correo && $telefono && $direccion && $contrasena && $region && $comuna && $archivoContenidoCodificado) {
         if (strpos($correo, '@administrador.cl') !== false) {
             $tabla = 'administrador';
@@ -59,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $result = pg_query($conn, $query);
 
 
-        
+
         if ($result) {
             echo "<div style='position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; text-align: center; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);'>
                     <p>Usuario registrado correctamente.</p>

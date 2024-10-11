@@ -41,19 +41,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $row = pg_fetch_assoc($result);
             $hash_contrasena = $row['contrasena'];
 
-            // Verifica la contraseña
             if (password_verify($contrasena, $hash_contrasena)) {
-                if (isset($verificar_permiso) && $verificar_permiso) { // Verifica si es un alumno
-                    $permiso = $row['permiso']; // Obtiene el permiso
+                if (isset($verificar_permiso) && $verificar_permiso) { 
+                    $permiso = $row['permiso'];
 
-                    if ($permiso) { // Verifica el permiso
+                    if ($permiso) { 
                         $_SESSION['usuario'] = $correo;
                         header("Location: /Proyecto_titulo/$pagina");
                         exit();
                     } else {
                         echo "No tienes permiso para acceder a tu cuenta.";
                     }
-                } else { // Si no es un alumno, permite el acceso
+                } else { 
                     $_SESSION['usuario'] = $correo;
                     header("Location: /Proyecto_titulo/$pagina");
                     exit();
@@ -71,7 +70,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     pg_close($conn);
 }
 ?>
-    
-    pg_close($conn);
-}
-?>
+
