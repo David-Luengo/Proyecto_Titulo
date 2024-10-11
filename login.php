@@ -34,17 +34,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
        
-        $query = "SELECT contrasena FROM $tabla WHERE correo = '$correo'";
+        $query = "SELECT contrasena" . ($verificar_permiso ? ", permiso" : "") . " FROM $tabla WHERE correo = '$correo'";
         $result = pg_query($conn, $query);
 
         if ($result && pg_num_rows($result) > 0) {
             $row = pg_fetch_assoc($result);
             $hash_contrasena = $row['contrasena'];
 
+            // Verifica la contraseña
             if (password_verify($contrasena, $hash_contrasena)) {
-                $_SESSION['usuario'] = $correo;
-                header("Location: /Proyecto_titulo/$pagina");
-                exit();
+                if (isset($verificar_permiso) && $verificar_permiso) { // Verifica si es un alumno
+                    $permiso = $row['permiso']; // Obtiene el permiso
+
+                    if ($permiso) { // Verifica el permiso
+                        $_SESSION['usuario'] = $correo;
+                        header("Location: /Proyecto_titulo/$pagina");
+                        exit();
+                    } else {
+                        echo "No tienes permiso para acceder a tu cuenta.";
+                    }
+                } else { // Si no es un alumno, permite el acceso
+                    $_SESSION['usuario'] = $correo;
+                    header("Location: /Proyecto_titulo/$pagina");
+                    exit();
+                }
             } else {
                 echo "Correo o contraseña incorrectos.";
             }
@@ -55,6 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Por favor, ingrese ambos campos.";
     }
 
+    pg_close($conn);
+}
+?>
     
     pg_close($conn);
 }

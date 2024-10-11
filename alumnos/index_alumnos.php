@@ -4,10 +4,51 @@ session_start();
 // Verificar si la sesión está iniciada
 if (!isset($_SESSION['usuario'])) {
     // Si no hay sesión iniciada, redirigir al login
-    header("Location: /Proyecto_titulo/index.html"); // o la página de login que utilices
+    header("Location: /Proyecto_titulo/index.html"); 
     exit();
 }
+
+// Conectar a la base de datos
+$host = "localhost";
+$port = "5432";
+$dbname = "Proyecto_Titulo";
+$user = "postgres";
+$password = "123456";
+
+$conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password";
+$conn = pg_connect($conn_string);
+
+if (!$conn) {
+    die("Error de conexión: " . pg_last_error());
+}
+
+// Obtener el correo o identificador del usuario actual desde la sesión
+$usuario_actual = $_SESSION['usuario'];
+
+// Consultar el valor de 'permiso' para el alumno
+$query = "SELECT permiso FROM alumnos WHERE correo = $1"; 
+$result = pg_query_params($conn, $query, array($usuario_actual));
+
+if ($result && pg_num_rows($result) > 0) {
+    $row = pg_fetch_assoc($result);
+    $permiso = $row['permiso'];
+
+    // Verificar si el permiso es 'false'
+    if (!$permiso) {
+        // Si no tiene permiso, redirigir a otra página o mostrar un mensaje de error
+        echo "<script>alert('No tienes permiso para acceder a esta página.');</script>";
+        header("Location: /Proyecto_titulo/sin_permiso.html"); // Redirigir a una página de error o salida
+        exit();
+    }
+} else {
+    echo "Error al verificar el permiso.";
+    exit();
+}
+
+pg_close($conn);
 ?>
+
+
 
 <!doctype html>
 <html lang="en">
