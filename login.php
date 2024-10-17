@@ -25,15 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } elseif (strpos($correo, '@alumnos.cl') !== false) {
             $tabla = 'alumnos';
             $pagina = 'alumnos/index_alumnos.php';
+            $verificar_permiso = true; 
         } elseif (strpos($correo, '@apoderados.cl') !== false) {
             $tabla = 'apoderadors';
             $pagina = 'apoderados/index_apoderados.html';
+            $verificar_permiso = true; 
         } else {
             echo "Correo no válido.";
             exit();
         }
 
-       
         $query = "SELECT contrasena" . ($verificar_permiso ? ", permiso" : "") . " FROM $tabla WHERE correo = '$correo'";
         $result = pg_query($conn, $query);
 
@@ -45,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (isset($verificar_permiso) && $verificar_permiso) { 
                     $permiso = $row['permiso'];
 
-                    if ($permiso) { 
+                    if ($permiso === 't') { 
                         $_SESSION['usuario'] = $correo;
                         header("Location: /Proyecto_titulo/$pagina");
                         exit();
@@ -69,5 +70,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     pg_close($conn);
 }
-?>
-

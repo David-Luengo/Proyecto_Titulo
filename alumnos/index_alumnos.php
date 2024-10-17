@@ -1,14 +1,11 @@
 <?php
 session_start();
 
-// Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['usuario'])) {
-    // Si no hay una sesión activa, redirigir al usuario a la página de inicio de sesión
-    header("Location: /Proyecto_titulo/login.html");
+    header("Location: /Proyecto_titulo/index.html"); 
     exit();
 }
 
-// Conexión a la base de datos
 $host = "localhost";
 $port = "5432";
 $dbname = "Proyecto_Titulo";
@@ -18,34 +15,30 @@ $password = "123456";
 $conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password";
 $conn = pg_connect($conn_string);
 
-// Verificar si hay conexión
 if (!$conn) {
     die("Error de conexión: " . pg_last_error());
 }
 
-// Obtener el correo del usuario desde la sesión
-$correo = $_SESSION['usuario'];
+$usuario_actual = $_SESSION['usuario'];
 
-// Consultar el permiso del alumno
-$query = "SELECT permiso FROM alumnos WHERE correo = '$correo'";
-$result = pg_query($conn, $query);
+$query = "SELECT permiso FROM alumnos WHERE correo = $1"; 
+$result = pg_query_params($conn, $query, array($usuario_actual));
 
 if ($result && pg_num_rows($result) > 0) {
     $row = pg_fetch_assoc($result);
     $permiso = $row['permiso'];
 
-    // Si el permiso no es true, redirigir al inicio de sesión
     if (!$permiso) {
-        header("Location: /Proyecto_titulo/login.html");
+        echo "<script>alert('No tienes permiso para acceder a esta página.');</script>";
+        header("Location: /Proyecto_titulo/sin_permiso.html");
         exit();
     }
 } else {
-    // Si no se encuentra el usuario o hay un error, redirigir al inicio de sesión
-    header("Location: /Proyecto_titulo/login.html");
+    echo "Error al verificar el permiso.";
     exit();
 }
 
-// Aquí puedes agregar el contenido que solo estará disponible si el permiso es true
+pg_close($conn);
 ?>
 
 

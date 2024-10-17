@@ -51,11 +51,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $tabla = 'alumnos';
         }
 
-        $query = "INSERT INTO $tabla (nombre, apellido, correo, numero, direccion, contrasena, archivo, nombre_archivo, tipo_archivo, region, comuna) 
-                  VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$direccion', '$contrasena', '$archivoContenidoCodificado', '$nombreArchivo', '$tipoArchivo', '$region', '$comuna')";
+        // Asignar permiso false por defecto (tiene acceso)
+        $permiso = 'false';
+
+        $query = "INSERT INTO $tabla (nombre, apellido, correo, numero, direccion, contrasena, archivo, nombre_archivo, tipo_archivo, region, comuna, permiso) 
+                  VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$direccion', '$contrasena', '$archivoContenidoCodificado', '$nombreArchivo', '$tipoArchivo', '$region', '$comuna', $permiso)";
         $result = pg_query($conn, $query);
-
-
 
         if ($result) {
             echo "<div style='position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; text-align: center; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);'>
