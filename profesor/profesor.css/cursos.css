@@ -1,11 +1,27 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+/* Estilo para asegurar que el footer quede al final de la página */
+html, body {
+    height: 100%;
+  }
+  
+  body {
     display: flex;
-    height: 80vh;
-    background-color: #f4f4f4;
-}
+    flex-direction: column;
+  }
+  
+  .container {
+    flex: 1; /* Asegura que el contenido crezca para llenar el espacio disponible */
+  }
+  
+  footer.sticky-footer {
+    
+    padding: 20px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+
+  
+
 
 .profile-container {
     display: flex;
@@ -77,3 +93,24 @@ body {
     background-color: #e9ecef;
     border-radius: 4px;
 }
+
+/* Estilo para asegurar que el footer quede al final de la página */
+html, body {
+    height: 100%;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .container {
+    flex: 1; /* Asegura que el contenido crezca para llenar el espacio disponible */
+  }
+  
+  footer.sticky-footer {
+    padding: 20px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }

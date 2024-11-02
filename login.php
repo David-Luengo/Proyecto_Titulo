@@ -21,14 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $pagina = 'administrador/index_administrador.php';
         } elseif (strpos($correo, '@profesor.cl') !== false) {
             $tabla = 'profesor';
-            $pagina = 'profesor/index_profesor.html';
+            $pagina = 'profesor/index_profesor.php';
         } elseif (strpos($correo, '@alumnos.cl') !== false) {
             $tabla = 'alumnos';
             $pagina = 'alumnos/index_alumnos.php';
             $verificar_permiso = true; 
         } elseif (strpos($correo, '@apoderados.cl') !== false) {
-            $tabla = 'apoderadors';
-            $pagina = 'apoderados/index_apoderados.html';
+            $tabla = 'apoderados';
+            $pagina = 'apoderados/index_apoderados.php';
             $verificar_permiso = true; 
         } else {
             echo "Correo no válido.";

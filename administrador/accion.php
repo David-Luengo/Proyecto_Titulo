@@ -18,28 +18,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($accion == 'eliminar') {
-        
-        $query = "DELETE FROM alumnos WHERE id = '$id'";
-        $result = pg_query($conn, $query);
+        // Eliminar tanto en la tabla alumnos como en la tabla apoderados
+        $query_alumnos = "DELETE FROM alumnos WHERE id = '$id'";
+        $result_alumnos = pg_query($conn, $query_alumnos);
 
-        if ($result) {
-            echo "Alumno eliminado correctamente.";
+        $query_apoderados = "DELETE FROM apoderados WHERE id = '$id'";
+        $result_apoderados = pg_query($conn, $query_apoderados);
+
+        if ($result_alumnos || $result_apoderados) {
+            echo "Registro eliminado correctamente.";
         } else {
-            echo "Error al eliminar el alumno: " . pg_last_error($conn);
+            echo "Error al eliminar el registro: " . pg_last_error($conn);
         }
     } elseif ($accion == 'permiso') {
-        
-        $query = "UPDATE alumnos SET permiso = true WHERE id = '$id'";
-        $result = pg_query($conn, $query);
+        // Otorgar permiso tanto en la tabla alumnos como en la tabla apoderados
+        $query_alumnos = "UPDATE alumnos SET permiso = true WHERE id = '$id'";
+        $result_alumnos = pg_query($conn, $query_alumnos);
 
-        if ($result) {
+        $query_apoderados = "UPDATE apoderados SET permiso = true WHERE id = '$id'";
+        $result_apoderados = pg_query($conn, $query_apoderados);
+
+        if ($result_alumnos || $result_apoderados) {
             echo "Permiso otorgado correctamente.";
         } else {
             echo "Error al otorgar permiso: " . pg_last_error($conn);
         }
     }
 
-    
+    // Redirigir de vuelta a la página principal
     header("Location: index_administrador.php");
     pg_close($conn);
 }

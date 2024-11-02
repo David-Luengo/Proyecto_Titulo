@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['usuario'])) {
+    header("Location: /Proyecto_titulo/index.html");
+    exit();
+}
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -20,7 +29,7 @@
 
     <nav class="navbar navbar-expand-lg p-3 fixed-top " id="menu" style="background-color: black; padding: 10px;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index_profesor.html">
+            <a class="navbar-brand" href="index_profesor.php">
                 <img src="../img/icono.png" alt="" width="30" height="30" class="d-inline-block align-top">
                 <span class="custom-text fs-5 fw-bold" style="color:  white;">EduAdmin</span>
             </a>
@@ -30,41 +39,43 @@
             </button>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="cursos_profesor.html" style="color:  white;">Cursos</a>
+                    <a class="nav-link" href="cursos_profesor.php" style="color:  white;">Cursos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="reuniones_profesor.html" style="color:  white;">Reuniones</a>
+                    <a class="nav-link" href="reuniones_profesor.php" style="color:  white;">Reuniones</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="calendario_profesor.html" style="color:  white;">Calendario</a>
+                    <a class="nav-link" href="asistencia_profesor.php" style="color:  white;">Asistencia</a>
             </ul>
-
-            <a class="nav-link nav-item fs-6" href="login.html" style="color: white;">Cerrar Sesión</a </div>
+           
+            <a class="nav-link nav-item fs-6"  href="./ausencia_profesor.php" style="color: white;">En caso de ausencia click aquí</a>
+            <a class="nav-link nav-item fs-6" href="../logout.php" style="color: white;">Cerrar Sesión</a>
+        </div>
     </nav>
 
     <div class="container mx-auto mt-10" style="margin: 150px;">
         <div class="space-y-4">
-            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primero_a.html"
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="gestion_profesor.php"
                 style="color: rgb(0, 0, 0); text-decoration: none;">
                 <span>PRIMERO MEDIO A</span>
                 <i class="fas fa-chevron-right"></i>
             </a>
-            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.html"
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.php"
                 style="color: rgb(0, 0, 0); text-decoration: none;">
                 <span>PRIMERO MEDIO B</span>
                 <i class="fas fa-chevron-right"></i>
             </a>
-            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.html"
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.php"
                 style="color: rgb(0, 0, 0); text-decoration: none;">
                 <span>PRIMERO MEDIO C</span>
                 <i class="fas fa-chevron-right"></i>
             </a>
-            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.html"
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.php"
                 style="color: rgb(0, 0, 0); text-decoration: none;">
                 <span>SEGUNDO MEDIO A</span>
                 <i class="fas fa-chevron-right"></i>
             </a>
-            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.html"
+            <a class="bg-gray-200 p-4 flex justify-between items-center nav-link" href="primeroA.php"
                 style="color: rgb(0, 0, 0); text-decoration: none;">
                 <span>SEGUNDO MEDIO B</span>
                 <i class="fas fa-chevron-right"></i>
