@@ -19,39 +19,41 @@ if (!$conn) {
     die("Error al conectar con la base de datos.");
 }
 
-// Obtener los nombres y apellidos de los alumnos
-$query = "SELECT id, nombre, apellido FROM public.alumnos";
-$result = pg_query($conn, $query);
+// Filtrar alumnos si se ha realizado una búsqueda
+$search = $_GET['search'] ?? '';
+$search_query = "SELECT id, nombre, apellido FROM public.alumnos";
+if ($search) {
+    $search_query .= " WHERE nombre ILIKE '%' || $1 || '%' OR apellido ILIKE '%' || $1 || '%'";
+    $result = pg_query_params($conn, $search_query, array($search));
+} else {
+    $result = pg_query($conn, $search_query);
+}
 
 if (!$result) {
     die("Error al realizar la consulta.");
 }
 
-// Guardar notas y calcular promedio
+// Guardar o actualizar cada nota individual
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['notas'])) {
     foreach ($_POST['notas'] as $alumno_id => $notas) {
         $total = 0;
         $count = 0;
 
-        // Guardar o actualizar cada nota individual en la base de datos
-        foreach ($notas as $index => $nota) {
-            $nota = (float) $nota;
-            if ($nota > 0) { // Solo contar las notas válidas
+        for ($i = 1; $i <= 7; $i++) {
+            $nota = isset($notas["nota_$i"]) ? (float)$notas["nota_$i"] : 0;
+            $nota_column = "nota_$i";
+
+            $query_nota = "UPDATE notas SET $nota_column = $1 WHERE alumno_id = $2";
+            pg_query_params($conn, $query_nota, array($nota, $alumno_id));
+
+            if ($nota > 0) {
                 $total += $nota;
                 $count++;
             }
-
-            // Actualizar la nota si ya existe, o insertarla si no
-            $query_nota = "INSERT INTO notas (alumno_id, nota, fecha) 
-                           VALUES ($1, $2, CURRENT_DATE)
-                           ON CONFLICT (alumno_id, fecha, nota)
-                           DO UPDATE SET nota = $2";
-            pg_query_params($conn, $query_nota, array($alumno_id, $nota));
         }
 
-        // Calcular el promedio y actualizarlo en la tabla `notas`
         $promedio = $count > 0 ? $total / $count : 0;
-        $query_promedio = "UPDATE notas SET promedio = $1 WHERE alumno_id = $2 AND fecha = CURRENT_DATE";
+        $query_promedio = "UPDATE notas SET promedio = $1 WHERE alumno_id = $2";
         pg_query_params($conn, $query_promedio, array($promedio, $alumno_id));
     }
     echo "<script>alert('Notas registradas correctamente.'); window.location.href = 'notas_profesor.php';</script>";
@@ -65,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['notas'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registro de Notas</title>
     <link rel="stylesheet" href="./profesor.css/cursos.css">
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -88,7 +89,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['notas'])) {
 
 <div class="container mt-5 pt-5">
     <h1 class="text-center mb-4">Registro de Notas</h1>
-    
+
+    <!-- Formulario de búsqueda -->
+    <form method="GET" action="notas_profesor.php" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Buscar por nombre o apellido" value="<?= htmlspecialchars($search) ?>">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+
     <h2 class="text-center mt-5">Lista de Alumnos</h2>
     <form method="POST" action="notas_profesor.php">
         <table class="table table-bordered mt-3">
@@ -104,32 +113,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['notas'])) {
             </thead>
             <tbody>
                 <?php
-                // Mostrar los nombres y apellidos de los alumnos y los campos para registrar las 7 notas
                 while ($row = pg_fetch_assoc($result)) {
                     $alumno_id = $row['id'];
                     $nombre = htmlspecialchars($row['nombre']);
                     $apellido = htmlspecialchars($row['apellido']);
 
-                    // Obtener las notas existentes del alumno para hoy
-                    $query_notas = "SELECT nota FROM notas WHERE alumno_id = $1 AND fecha = CURRENT_DATE ORDER BY fecha";
+                    $query_notas = "SELECT nota_1, nota_2, nota_3, nota_4, nota_5, nota_6, nota_7, promedio FROM notas WHERE alumno_id = $1";
                     $result_notas = pg_query_params($conn, $query_notas, array($alumno_id));
-                    $notas_actuales = pg_fetch_all_columns($result_notas, 0);
+                    $notas_actuales = pg_fetch_assoc($result_notas);
 
                     echo "<tr>";
                     echo "<td>$nombre</td>";
                     echo "<td>$apellido</td>";
                     
-                    // Crear 7 campos de entrada para las notas, con valores preexistentes si están en la base de datos
-                    for ($i = 0; $i < 7; $i++) {
-                        $nota_valor = $notas_actuales[$i] ?? ''; // Mostrar la nota actual si existe
-                        echo "<td><input type='number' step='0.01' name='notas[$alumno_id][]' class='form-control' value='$nota_valor'></td>";
+                    for ($i = 1; $i <= 7; $i++) {
+                        $nota_valor = $notas_actuales["nota_$i"] ?? '';
+                        echo "<td><input type='number' step='0.01' name='notas[$alumno_id][nota_$i]' class='form-control' value='$nota_valor'></td>";
                     }
 
-                    // Consultar el promedio actual para la fecha de hoy
-                    $query_promedio = "SELECT promedio FROM notas WHERE alumno_id = $1 AND fecha = CURRENT_DATE LIMIT 1";
-                    $result_promedio = pg_query_params($conn, $query_promedio, array($alumno_id));
-                    $promedio = $result_promedio && pg_num_rows($result_promedio) > 0 ? pg_fetch_result($result_promedio, 0, 'promedio') : 0;
-
+                    $promedio = $notas_actuales['promedio'] ?? 0;
                     echo "<td><input type='text' class='form-control' value='" . number_format($promedio, 2) . "' readonly></td>";
                     echo "</tr>";
                 }
@@ -138,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['notas'])) {
         </table>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-primary mt-4">Registrar Notas</button>
+            <button type="submit" class="btn btn-primary mt-4">Registrar o Actualizar Notas</button>
         </div>
     </form>
 </div>
@@ -156,6 +158,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['notas'])) {
 </html>
 
 <?php
-// Cerrar la conexión al final del archivo
 pg_close($conn);
 ?>

@@ -1,0 +1,27 @@
+TENEMOS:
+
+	Vista de despliegue (parcial)
+Diegrama de paquetes
+
+	Vista de escenarios
+Diargama de casos de uso
+
+	Vista lógica (completa)
+Diagrama de secuencia
+
+Diagrama de clases
+
+Diagrma de comunicación (faltan 3 usuarios)
+
+	Vista de procesos (completo)
+Diagrama de actividades
+
+
+
+FALTAN:
+
+	Vista de despliegue (parcial)
+Diagrama de componentes
+
+    Vista física (parcial)
+Diagrama de despliegue

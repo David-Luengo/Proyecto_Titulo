@@ -16,19 +16,27 @@ $conn_string = "host=$host port=$port dbname=$dbname user=$user password=$passwo
 $conn = pg_connect($conn_string);
 
 if (!$conn) {
-    die("Error al conectar con la base de datos.");
-}
-
-// Obtener los nombres y apellidos de los alumnos
-$query = "SELECT id, nombre, apellido FROM public.alumnos";
-$result = pg_query($conn, $query);
-
-if (!$result) {
-    die("Error al realizar la consulta.");
+    die("Error de conexión: " . pg_last_error());
 }
 
 // Obtener la fecha actual
 $fecha_actual = date("Y-m-d");
+
+// Filtrar por búsqueda de nombre o apellido si se envía
+$search_term = isset($_GET['search']) ? trim($_GET['search']) : '';
+$query = "SELECT id, nombre, apellido FROM public.alumnos";
+$params = [];
+
+if ($search_term) {
+    $query .= " WHERE nombre ILIKE $1 OR apellido ILIKE $1";
+    $params[] = '%' . $search_term . '%';
+}
+
+$result = pg_query_params($conn, $query, $params);
+
+if (!$result) {
+    die("Error al realizar la consulta.");
+}
 ?>
 
 <!doctype html>
@@ -40,6 +48,13 @@ $fecha_actual = date("Y-m-d");
     <link rel="stylesheet" href="./profesor.css/cursos.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-check-input[type="radio"] {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+        }
+    </style>
 </head>
 <body>
 
@@ -64,7 +79,13 @@ $fecha_actual = date("Y-m-d");
 
     <!-- Mostrar la fecha de hoy -->
     <h3 class="text-center text-muted">Fecha: <?php echo date("d-m-Y"); ?></h3>
-    
+
+    <!-- Formulario de búsqueda -->
+    <form class="d-flex justify-content-center mb-4" method="GET" action="asistencia_profesor.php">
+        <input type="text" name="search" class="form-control w-50" placeholder="Buscar por nombre o apellido" value="<?php echo htmlspecialchars($search_term); ?>">
+        <button type="submit" class="btn btn-primary ms-2">Buscar</button>
+    </form>
+
     <h2 class="text-center mt-5">Lista de Alumnos</h2>
     <form method="POST" action="procesar_asistencia.php">
         <table class="table table-bordered mt-3">
@@ -72,8 +93,8 @@ $fecha_actual = date("Y-m-d");
                 <tr>
                     <th>Nombre</th>
                     <th>Apellido</th>
-                    <th>Registrar Asistencia</th>
-                    <th>Estado</th>
+                    <th>Asistencia</th>
+                    <th>Estado Actual</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,23 +105,31 @@ $fecha_actual = date("Y-m-d");
                     $nombre = htmlspecialchars($row['nombre']);
                     $apellido = htmlspecialchars($row['apellido']);
 
-                    // Verificar si ya existe un registro de asistencia para el alumno en la fecha actual (solo el día)
-                    $query_asistencia = "SELECT * FROM asistencia WHERE alumno_id = $1 AND DATE(fecha) = CURRENT_DATE";
-                    $result_asistencia = pg_query_params($conn, $query_asistencia, array($alumno_id));
-
-                    $asistencia_registrada = pg_num_rows($result_asistencia) > 0;
+                    // Verificar el estado actual de la asistencia
+                    $query_asistencia = "SELECT estado FROM asistencia WHERE alumno_id = $1 AND fecha = $2";
+                    $result_asistencia = pg_query_params($conn, $query_asistencia, array($alumno_id, $fecha_actual));
+                    $estado_asistencia = ($result_asistencia && pg_num_rows($result_asistencia) > 0) ? pg_fetch_result($result_asistencia, 0, 'estado') : 'sin_asignar';
 
                     echo "<tr>";
                     echo "<td>$nombre</td>";
                     echo "<td>$apellido</td>";
-                    if ($asistencia_registrada) {
-                        // Desactivar la casilla si ya se registró asistencia
-                        echo "<td><input type='checkbox' disabled></td>";
-                        echo "<td><span class='badge bg-success'>Asistencia registrada</span></td>";
-                    } else {
-                        echo "<td><input type='checkbox' name='alumnos[]' value='$alumno_id'></td>";
-                        echo "<td><span class='badge bg-warning'>No registrada</span></td>";
-                    }
+                    echo "<td>
+                            <div class='d-flex justify-content-around'>
+                                <div class='form-check'>
+                                    <input class='form-check-input' type='radio' name='asistencia[$alumno_id]' id='asistido_$alumno_id' value='asistido' " . ($estado_asistencia == 'asistido' ? 'checked' : '') . ">
+                                    <label class='form-check-label text-success' for='asistido_$alumno_id'>Asistido</label>
+                                </div>
+                                <div class='form-check'>
+                                    <input class='form-check-input' type='radio' name='asistencia[$alumno_id]' id='ausente_$alumno_id' value='ausente' " . ($estado_asistencia == 'ausente' ? 'checked' : '') . ">
+                                    <label class='form-check-label text-danger' for='ausente_$alumno_id'>Ausente</label>
+                                </div>
+                                <div class='form-check'>
+                                    <input class='form-check-input' type='radio' name='asistencia[$alumno_id]' id='sin_asignar_$alumno_id' value='sin_asignar' " . ($estado_asistencia == 'sin_asignar' ? 'checked' : '') . ">
+                                    <label class='form-check-label text-secondary' for='sin_asignar_$alumno_id'>Sin Asignar</label>
+                                </div>
+                            </div>
+                          </td>";
+                    echo "<td><span class='badge bg-" . ($estado_asistencia == 'asistido' ? 'success' : ($estado_asistencia == 'ausente' ? 'danger' : 'secondary')) . "'>$estado_asistencia</span></td>";
                     echo "</tr>";
                 }
                 ?>
@@ -108,7 +137,7 @@ $fecha_actual = date("Y-m-d");
         </table>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-primary mt-4">Registrar Asistencia</button>
+            <button type="submit" class="btn btn-primary mt-4">Guardar Asistencia</button>
         </div>
     </form>
 </div>

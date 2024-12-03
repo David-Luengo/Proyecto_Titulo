@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['usuario'])) {
-    header("Location: /Proyecto_titulo/index.html"); 
+    header("Location: /Proyecto_Titulo/index.html"); 
     exit();
 }
 
@@ -21,22 +21,23 @@ if (!$conn) {
 
 $usuario_actual = $_SESSION['usuario'];
 
-$query = "SELECT permiso FROM alumnos WHERE correo = $1"; 
+// Obtener el ID del alumno basado en su correo
+$query = "SELECT id, nombre, apellido FROM alumnos WHERE correo = $1";
 $result = pg_query_params($conn, $query, array($usuario_actual));
 
 if ($result && pg_num_rows($result) > 0) {
     $row = pg_fetch_assoc($result);
-    $permiso = $row['permiso'];
-
-    if (!$permiso) {
-        echo "<script>alert('No tienes permiso para acceder a esta página.');</script>";
-        header("Location: /Proyecto_titulo/sin_permiso.html");
-        exit();
-    }
+    $alumno_id = $row['id'];
+    $nombre_alumno = $row['nombre'];
+    $apellido_alumno = $row['apellido'];
 } else {
-    echo "Error al verificar el permiso.";
+    echo "Error al obtener los datos del alumno.";
     exit();
 }
+
+// Obtener el estado de asistencia del alumno en las fechas disponibles
+$query_asistencia = "SELECT fecha, estado FROM asistencia WHERE alumno_id = $1 ORDER BY fecha DESC";
+$result_asistencia = pg_query_params($conn, $query_asistencia, array($alumno_id));
 
 pg_close($conn);
 ?>
@@ -54,9 +55,7 @@ pg_close($conn);
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="./alumnos.css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <title>Index</title>
+    <title>Estado de Asistencia</title>
 </head>
 
 <body>
@@ -65,21 +64,17 @@ pg_close($conn);
         <div class="container-fluid">
             <a class="navbar-brand" href="index_alumnos.php">
                 <img src="../img/icono.png" alt="" width="30" height="30" class="d-inline-block align-top">
-                <span class="custom-text fs-5 fw-bold" style="color:  white;">EduAdmin</span>
+                <span class="custom-text fs-5 fw-bold" style="color: white;">EduAdmin</span>
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="asistencia_alumno.php" style="color:  white;">Asistencia</a>
+                    <a class="nav-link" href="asistencia_alumno.php" style="color: white;">Asistencia</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="notas_alumnos.php" style="color:  white;">Notas</a>
+                    <a class="nav-link" href="notas_alumnos.php" style="color: white;">Notas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="materias.php" style="color:  white;">Materias</a>
+                    <a class="nav-link" href="materias.php" style="color: white;">Materias</a>
                 </li>
             </ul>
     
@@ -87,172 +82,63 @@ pg_close($conn);
         </div>
     </nav>
     
+    <div class="container" style="margin-top: 100px;">
+        <h3 class="text-center mb-4">Estado de Asistencia</h3>
+        <p class="text-center"><strong>Nombre del alumno:</strong> <?php echo htmlspecialchars("$nombre_alumno $apellido_alumno"); ?></p>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      height: 80vh;
-      background-color: #f4f4f4;
-    }
-
-    .profile-container {
-      display: flex;
-      width: 75%;
-      margin: auto;
-      padding: 20px;
-      background-color: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-    }
-
-    .profile-info {
-      flex: 2;
-      padding: 20px;
-    }
-
-    .profile-info img {
-      border-radius: 50%;
-      width: 150px;
-      height: 150px;
-      object-fit: cover;
-    }
-
-    .profile-info h1 {
-      margin-top: 10px;
-      font-size: 24px;
-      color: #333;
-    }
-
-    .profile-info p {
-      margin: 8px 0;
-      color: #666;
-    }
-
-    .profile-info a {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 16px;
-      background-color: #007bff;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
-    }
-
-    .profile-info a:hover {
-      background-color: #0056b3;
-    }
-
-    .dashboard {
-      flex: 1;
-      padding: 20px;
-      background-color: #f8f9fa;
-      border-left: 1px solid #ddd;
-    }
-
-    .dashboard h3 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    .dashboard ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .dashboard ul li {
-      margin: 10px 0;
-      padding: 10px;
-      background-color: #e9ecef;
-      border-radius: 4px;
-    }
-  </style>
-  <div class="container-fluid mt-5" style="padding: 80px;">
-
-    <h2 class="text-center mb-4">Registro de Asistencia de Juan Pérez</h2>
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>Materia</th>
-          <th>% Asistencia</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Matemáticas</td>
-          <td>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0"
-                aria-valuemax="100">90%</div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Lengua Española</td>
-          <td>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0"
-                aria-valuemax="100">80%</div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Ciencias Naturales</td>
-          <td>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 95%;" aria-valuenow="95" aria-valuemin="0"
-                aria-valuemax="100">95%</div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Historia</td>
-          <td>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0"
-                aria-valuemax="100">85%</div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <footer class="fixed-bottom container-fluid bg-gray p-4">
-    <div class="row">
-      <div class="col-md-4">
-        <h5 class="text-uppercase">Contacto</h5>
-        <ul class="list-unstyled">
-          <li><i class="fas fa-envelope"></i> <a href="mailto:info@eduadmin.com"
-              class="text-secondary">info@eduadmin.com</a></li>
-          <li><i class="fas fa-phone"></i> <a href="https://wa.me/56974394982" target="_blank"
-              class="text-secondary">+56 9 7439 4982</a></li>
-          <li><i class="fab fa-facebook-f"></i> <a href="https://www.facebook.com/eduadmin" target="_blank"
-              class="text-secondary">Facebook</a></li>
-          <li><i class="fab fa-instagram"></i> <a href="https://instagram.com/eduadmin" target="_blank"
-              class="text-secondary">Instagram</a></li>
-        </ul>
-      </div>
-      <div class="col-md-4">
-        <h5 class="text-uppercase">Ayuda y Soporte</h5>
-        <ul class="list-unstyled">
-          <li><a href="#" class="text-secondary">Preguntas frecuentes</a></li>
-          <li><a href="#" class="text-secondary">Manual de usuario</a></li>
-          <li><a href="#" class="text-secondary">Soporte técnico</a></li>
-        </ul>
-      </div>
-      <div class="col-md-4">
-        <h5 class="text-uppercase">Desarrolladores</h5>
-        <p class="text-secondary">Página desarrollada por David Luengo, Diego Lezana y Vicente Basaure</p>
-      </div>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Materia</th>
+                    <th>Estado de Asistencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if ($result_asistencia && pg_num_rows($result_asistencia) > 0) {
+                    while ($asistencia = pg_fetch_assoc($result_asistencia)) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($asistencia['fecha']) . "</td>";
+                        echo "<td>Lenguaje</td>"; // Materia fija como ejemplo
+                        echo "<td><span class='badge bg-" . 
+                             ($asistencia['estado'] == 'asistido' ? 'success' : ($asistencia['estado'] == 'ausente' ? 'danger' : 'secondary')) .
+                             "'>" . htmlspecialchars($asistencia['estado']) . "</span></td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='3' class='text-center'>No hay registros de asistencia.</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
     </div>
-  </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+    <footer class="fixed-bottom container-fluid bg-gray p-4">
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Contacto</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope"></i> <a href="mailto:info@eduadmin.com" class="text-secondary">info@eduadmin.com</a></li>
+                    <li><i class="fas fa-phone"></i> <a href="https://wa.me/56974394982" target="_blank" class="text-secondary">+56 9 7439 4982</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Ayuda y Soporte</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-secondary">Preguntas frecuentes</a></li>
+                    <li><a href="#" class="text-secondary">Manual de usuario</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Desarrolladores</h5>
+                <p class="text-secondary">Página desarrollada por David Luengo, Diego Lezana y Vicente Basaure</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 </body>
 
